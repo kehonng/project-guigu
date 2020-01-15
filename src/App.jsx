@@ -1,20 +1,40 @@
-import React, { Component } from 'react'
-import { BrowserRouter as Router,Route,Switch } from 'react-router-dom'
+import React, { Component } from 'react';
+import { IntlProvider } from 'react-intl';
+import { connect } from 'react-redux'
+import { ConfigProvider } from 'antd';
+import { BrowserRouter as Router,Route,Switch } from 'react-router-dom';
 import Home from './components/home';
 import Login from './containers/login';
-import BasicLayout from './components/basic-layout'
+import BasicLayout from './components/basic-layout';
+import { en,zhCN} from './locales';
+import zh_CN from 'antd/es/locale/zh_CN';
+import en_US from 'antd/es/locale/en_US';
 
-export default class extends Component{
+
+@connect(
+  (state)=>({language:state.language}),null
+)
+class App extends Component{
   render(){
+    const language = this.props.language;
+    //console.log(language);
+    const isEn = language === 'en';
+     
     return (
-      <Router>
-        <Switch>
-          <Route path='/login' exact component={Login} />
-          <BasicLayout>
-            <Route path='/' exact component={Home} />
-          </BasicLayout>
-        </Switch>
-      </Router>
+      <ConfigProvider locale={isEn?en_US:zh_CN}>
+        <IntlProvider locale={language}  messages={isEn?en:zhCN}>
+          <Router>
+            <Switch>
+              <Route path='/login' exact component={Login} />
+              <BasicLayout>
+                <Route path='/' exact component={Home} />
+              </BasicLayout>
+            </Switch>
+          </Router>
+        </IntlProvider>
+      </ConfigProvider>
+      
     )
   }
 }
+export default App;

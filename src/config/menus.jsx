@@ -3,25 +3,25 @@
 const menus = [
 
   {
-    title:'首页',
+    title:'home',
     icon:'home',
     key:1,
     path:"/"
   },
   {
-    title:'商品',
+    title:'products',
     icon:'qrcode',
     key:2,
-    path:'/cate',
+    path:'/products',
     children:[
       {
-        title:'分类管理',
+        title:'category',
         icon:'unordered-list',
         key:3,
         path:'/category'
       },
       {
-        title:'商品管理',
+        title:'product',
         icon:'tool',
         key:4,
         path:'/product'
@@ -29,37 +29,37 @@ const menus = [
     ]
   },
   {
-    title:'用户管理',
+    title:'user',
     icon:'user',
     key:5,
     path:'/user'
   },
   {
-    title:'权限管理',
+    title:'role',
     icon:'safety',
     key:6,
     path:'/role'
   },
   {
-    title:'图片管理',
+    title:'charts',
     icon:'area-chart',
     key:7,
     path:'/charts',
     children:[
       {
-        title:'柱状图',
+        title:'bar',
         icon:'bar-chart',
         key:8,
         path:'/charts/bar'
       },
       {
-        title:'饼状图',
+        title:'pie',
         icon:'pie-chart',
         key:9,
         path:'/charts/pie'
       },
       {
-        title:'饼状图',
+        title:'line',
         icon:'line-chart',
         key:10,
         path:'/charts/line'

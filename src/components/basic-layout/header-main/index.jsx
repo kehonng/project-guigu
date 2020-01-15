@@ -1,17 +1,24 @@
 import React, { Component } from 'react';
 import { Button , Icon, Modal} from 'antd';
-
+import { injectIntl,FormattedMessage } from 'react-intl'
 import screenfull from 'screenfull';
 import { withRouter } from 'react-router-dom'
 import { removeItem } from '$utils/storage';
 import { connect} from 'react-redux';
-import { removeUser } from '../../../redux/actions';
+
+import { removeUser,changeLanguage } from '../../../redux/actions';
+import menus from '$conf/menus';
 import './index.less';
 
 
-//暂且看不懂
-@connect(state => ({ username: state.user.user && state.user.user.username }), {
-  removeUser
+
+@injectIntl
+@connect(state => ({ 
+  username: state.user.user && state.user.user.username,
+  language:state.language
+ }), {
+  removeUser,
+  changeLanguage
 })
 @withRouter
  class HaderMain extends Component {
@@ -23,10 +30,10 @@ import './index.less';
   }
   handleScreenFullChange =()=>{
     this.setState({
-      isScreenFull:!this.state.isScreenFull
+      isScreenfull:!this.state.isScreenfull
     })
   };
- componentWillMount(){
+ componentWillUnmount(){
   screenfull.off('change', this.handleScreenFullChange);
  }
 
@@ -34,9 +41,10 @@ import './index.less';
     screenfull.toggle();
   };
   loginOut = () => {
+    const {intl} = this.props;
     // 显示对话框
     Modal.confirm({
-      title: '您确认要退出登录吗?',
+      title: intl.formatMessage({id:'logout'}),
       onOk: () => {
         // 清空用户数据
         removeItem('user');
@@ -47,21 +55,53 @@ import './index.less';
       // onCancel: () => {}
     });
   };
+  changeLanguage =()=>{
+    const language = this.props.language === 'en'?'zh-CN':'en';
+    this.props.changeLanguage(language)
+  }
+
+  findTitle = (menus,pathname)=>{
+    for (let index = 0; index < menus.length; index++) {
+      const menu = menus[index];
+      //二级菜单
+      if(menu.children){
+        for (let index = 0; index < menu.children.length; index++) {
+          const cMenu = menu.children[index];
+          if(cMenu.path === pathname){
+            return cMenu.title;
+          } 
+       }
+      }else{
+        if(menu.path === pathname){
+          return menu.title;
+      }
+    }
+  }
+}
   render() {
-    const {username,state} = this.props;
+    const { isScreenfull} = this.state;
+    const {username,language,location:{pathname}} = this.props;
     console.log(this.props)
+    const title = this.findTitle(menus,pathname)
     return (
       <div className='header-main'>
         <div className='header-main-top'>
           <Button size='small' onClick={this.screenFull}>
-            <Icon type="fullscreen" />
+            <Icon type={isScreenfull ? 'fullscreen-exit' : 'fullscreen'}/>
             </Button>
-          <Button size='small' className='header-main-lang'>English</Button>
+          <Button size='small' className='header-main-lang' onClick={this.changeLanguage}>
+            {
+              language === 'en'?'English':'中文'
+            }
+            </Button>
           <span>{username}</span>
           <Button type='link' size='small' onClick={this.loginOut}>退出</Button>
         </div>
         <div className='header-main-bottom'>
-        <span className='header-main-left'>商品管理</span>
+        <span className='header-main-left'>
+      
+        <FormattedMessage id={title}/>
+        </span>
         <span className='header-main-right'>2020/01/15/0:18</span>
         </div>
       </div>
