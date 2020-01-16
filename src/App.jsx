@@ -3,7 +3,7 @@ import { IntlProvider } from 'react-intl';
 import { connect } from 'react-redux'
 import { ConfigProvider } from 'antd';
 import { BrowserRouter as Router,Route,Switch } from 'react-router-dom';
-import Home from './components/home';
+import routes from './config/routes';
 import Login from './containers/login';
 import BasicLayout from './components/basic-layout';
 import { en,zhCN} from './locales';
@@ -27,7 +27,12 @@ class App extends Component{
             <Switch>
               <Route path='/login' exact component={Login} />
               <BasicLayout>
-                <Route path='/' exact component={Home} />
+                {
+                  routes.map((route)=>{
+                  return  <Route {...route} key={route.path} />
+                  })
+                }
+               
               </BasicLayout>
             </Switch>
           </Router>

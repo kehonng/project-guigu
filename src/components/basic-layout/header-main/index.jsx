@@ -3,6 +3,8 @@ import { Button , Icon, Modal} from 'antd';
 import { injectIntl,FormattedMessage } from 'react-intl'
 import screenfull from 'screenfull';
 import { withRouter } from 'react-router-dom'
+import dayjs from 'dayjs';
+
 import { removeItem } from '$utils/storage';
 import { connect} from 'react-redux';
 
@@ -23,10 +25,17 @@ import './index.less';
 @withRouter
  class HaderMain extends Component {
   state={
-    isScreenFull:false
+    isScreenFull:false,
+    data:Date.now()
   }
   componentDidMount(){
     screenfull.on('change', this.handleScreenFullChange);
+
+    this.timeId = setInterval(()=>{
+      this.setState({
+        data:Date.now()
+      })
+    },1000)
   }
   handleScreenFullChange =()=>{
     this.setState({
@@ -35,6 +44,7 @@ import './index.less';
   };
  componentWillUnmount(){
   screenfull.off('change', this.handleScreenFullChange);
+  clearInterval(this.timeId);
  }
 
   screenFull = () => {
@@ -78,8 +88,9 @@ import './index.less';
     }
   }
 }
+
   render() {
-    const { isScreenfull} = this.state;
+    const { isScreenfull,data} = this.state;
     const {username,language,location:{pathname}} = this.props;
     console.log(this.props)
     const title = this.findTitle(menus,pathname)
@@ -102,7 +113,11 @@ import './index.less';
       
         <FormattedMessage id={title}/>
         </span>
-        <span className='header-main-right'>2020/01/15/0:18</span>
+        <span className='header-main-right'>
+          {
+            dayjs(data).format('YYYY-MM-DD HH:mm:ss')
+          }
+        </span>
         </div>
       </div>
     )

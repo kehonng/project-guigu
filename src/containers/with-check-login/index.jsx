@@ -30,9 +30,9 @@ export default function withCheckLogin(WrappedComponent) {
         }
       } else {
         // 没有登录过
-        if (pathname === '/') {
+        if (pathname !== '/Login') {
           // 跳转到主页
-          return <Redirect to="/Login"/>;
+          return <Redirect to='/Login' />;
         }
       }
 

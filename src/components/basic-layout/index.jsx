@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { FormattedMessage } from 'react-intl';
+import withCheckLogin from '$cont/with-check-login';
 import logo from'../../assets/img/logo.png';
 import './index.less';
 import LeftNav from './left-nav';
@@ -10,8 +11,8 @@ import '../basic-layout/header-main/'
 const { Header, Content, Footer, Sider } = Layout;
 //const { SubMenu } = Menu;
 
-
-export default class BasicLayout extends Component {
+@withCheckLogin
+class BasicLayout extends Component {
   state = {
     collapsed: false,
     isDisplay:true
@@ -43,10 +44,9 @@ export default class BasicLayout extends Component {
             {/* 头部静态 */}
           <HaderMain />
           </Header>
-          <Content style={{ margin: '0 16px' }}>
+          <Content style={{ margin: '16px 16px 0 16px' }}>
             <Breadcrumb style={{ margin: '16px 0' }}>
-              <Breadcrumb.Item>User</Breadcrumb.Item>
-              <Breadcrumb.Item>Bill</Breadcrumb.Item>
+             
             </Breadcrumb>
             <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>{children}</div>
           </Content>
@@ -56,3 +56,5 @@ export default class BasicLayout extends Component {
     );
   }
 }
+
+export default BasicLayout;
