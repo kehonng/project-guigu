@@ -1,6 +1,8 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
+import widtCheckLogin from '$cont/with-check-login';
 
-export default class Home extends Component {
+@widtCheckLogin
+class Home extends Component {
   render() {
     return (
       <div>
@@ -9,3 +11,4 @@ export default class Home extends Component {
     )
   }
 }
+export default Home;

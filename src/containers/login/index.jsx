@@ -3,11 +3,14 @@ import { Form, Icon, Input, Button, message} from 'antd';
 import { connect } from 'react-redux'; 
 
 import { saveUserAsync } from '../../redux/actions';
+import widtCheckLogin from '../with-check-login'
 
 
 //图片需要引入才可以使用
-import logo from './logo.png';
+import logo from '../../assets/logo.png';
 import './index.less';
+
+@widtCheckLogin
 @connect(null,{
   saveUserAsync
   }

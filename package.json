@@ -15,7 +15,7 @@
     "react-scripts": "3.3.0",
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
-    "screenfull": "^5.0.0"
+    "screenfull": "^5.0.1"
   },
   "scripts": {
     "start": "react-app-rewired start",
@@ -47,5 +47,4 @@
     "redux-devtools-extension": "^2.13.8"
   },
   "proxy": "http://47.103.203.152"
- 
 }
