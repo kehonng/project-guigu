@@ -1,10 +1,21 @@
 import React, { Component } from 'react';
-import { Button, Icon } from 'antd';
-import screenfull from 'screenfull'
+import { Button, Icon,  Modal } from 'antd';
+import screenfull from 'screenfull';
+import {withRouter} from 'react-router-dom';
+import { connect } from 'react-redux';
+
+
+import { removeItem } from '$utils/storage.js';
+import { removeUser } from '$redux/actions.js'
 
 import './index.less';
 
-export default class HeaderMin extends Component {
+@connect(
+  (state)=>({username:state.user.user && state.user.user.username}),
+  {removeUser}
+)
+@withRouter
+class HeaderMin extends Component {
   state={
     isScreenFull:false
   }
@@ -25,8 +36,25 @@ export default class HeaderMin extends Component {
   screenFull =()=>{
     screenfull.toggle();
   }
+  //退出事件
+  logout=()=>{
+    Modal.confirm({
+      title: '您确定您要退出吗?',
+      onOk:()=>{
+        //清空给数据
+        removeItem('user');
+        
+        this.props.removeUser();
+        //跳转到login页面
+        this.props.history.replace('/login');
+      }
+    });
+  }
   render() {
     const { isScreenFull } =this.state;
+    const { username } = this.props;
+  
+    
     return (
       <div className='header-main'>
          <div className='header-main-top'>
@@ -34,8 +62,8 @@ export default class HeaderMin extends Component {
               <Icon type={isScreenFull ?"fullscreen-exit":"fullscreen"} />
             </Button>
             <Button size='small' className='header-lang'>English</Button>
-            <span>hello, admin</span>
-            <Button type='link' size='small'>退出</Button>
+            <span>hello, {username}</span>
+            <Button type='link' size='small' onClick={this.logout}>退出</Button>
          </div>
          <div className='header-main-bottom'>
            <div className='header-main-left'>首页</div>
@@ -45,3 +73,4 @@ export default class HeaderMin extends Component {
     )
   }
 }
+export default HeaderMin;
