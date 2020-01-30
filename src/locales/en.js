@@ -12,7 +12,7 @@ const en ={
   charts:'charts',
   bar:'bar',
   pie:'pie',
-  line:'line'
+  logout: 'Are you sure you want to log out?'
 }
 
 export default en;

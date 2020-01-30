@@ -12,7 +12,8 @@ const zhCN = {
   charts:'图形图表~',
   bar:'柱状图~',
   pie:'饼状图~',
-  line:'折线图~'
+  line:'折线图~',
+  logout: '您确认要退出登录吗?'
 }
 
 export default zhCN;
