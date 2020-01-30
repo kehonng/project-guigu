@@ -9,7 +9,7 @@ import Test from './containers/login';
 import BasicLayout from './components/basic-layout';
 import { en, zhCN} from './locales/index';
 import zh_CN from 'antd/es/locale/zh_CN';
-import en_US from 'antd/es/locale/en_CN';
+import en_US from 'antd/es/locale/en_US';
 
 
 @connect((state)=>({language:state.language}),null)
