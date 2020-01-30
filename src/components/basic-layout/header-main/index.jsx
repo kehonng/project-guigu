@@ -6,13 +6,19 @@ import { connect } from 'react-redux';
 
 
 import { removeItem } from '$utils/storage.js';
-import { removeUser } from '$redux/actions.js'
+import { removeUser, changeLanguage } from '$redux/actions';
 
 import './index.less';
 
 @connect(
-  (state)=>({username:state.user.user && state.user.user.username}),
-  {removeUser}
+  state => ({
+    username: state.user.user && state.user.user.username,
+    language: state.language
+  }),
+  {
+    removeUser,
+    changeLanguage
+  }
 )
 @withRouter
 class HeaderMin extends Component {
@@ -49,10 +55,16 @@ class HeaderMin extends Component {
         this.props.history.replace('/login');
       }
     });
-  }
+  };
+  //单击国际化事件
+  changeLanguage = () => {
+    const language = this.props.language === 'en' ? 'zh-CN' : 'en';
+    this.props.changeLanguage(language);
+  };
+
   render() {
     const { isScreenFull } =this.state;
-    const { username } = this.props;
+    const { username, language } = this.props;
   
     
     return (
@@ -61,7 +73,7 @@ class HeaderMin extends Component {
             <Button size='small' onClick={this.screenFull}>
               <Icon type={isScreenFull ?"fullscreen-exit":"fullscreen"} />
             </Button>
-            <Button size='small' className='header-lang'>English</Button>
+            <Button size='small' className='header-lang' onClick={this.changeLanguage}>{language==='en'?'Eglish':'中文'}</Button>
             <span>hello, {username}</span>
             <Button type='link' size='small' onClick={this.logout}>退出</Button>
          </div>

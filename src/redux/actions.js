@@ -5,8 +5,10 @@
  */
 import { reqLogin } from '../api';
 import { setItem } from '../utils/storage';
-import { SAVE_USER, REMOVE_USER }from './action-types';
+import { SAVE_USER, REMOVE_USER, CHANGE_LANGUAGE }from './action-types';
 
+//语言转换
+export const changeLanguage = (lang)=>({type:CHANGE_LANGUAGE,data:lang});
 
 //退出清空用户数据
 export const removeUser = ()=>({type:REMOVE_USER});

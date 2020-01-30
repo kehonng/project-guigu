@@ -3,6 +3,8 @@ import {Menu, Icon} from 'antd';
 import { Link, withRouter } from 'react-router-dom';
 
 import menus from '../../../config/mens';
+import { FormattedMessage } from 'react-intl';
+
 const { SubMenu, Item } = Menu;
 
 @withRouter//给子组件传递三大属性
@@ -18,7 +20,7 @@ class LeftNav extends Component {
           title={
             <span>
               <Icon type={menu.Icon} />
-              <span>{menu.title}</span>
+              <FormattedMessage id={menu.title} />
             </span>
           }
         >
@@ -37,7 +39,7 @@ class LeftNav extends Component {
    return <Item key={menu.path}>
       <Link to={menu.path}>
         <Icon type={menu.Icon} />
-        <span>{menu.title}</span>
+        <FormattedMessage id={menu.title} />
       </Link>
     </Item>
   }

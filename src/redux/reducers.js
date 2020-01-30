@@ -4,7 +4,7 @@
 import { combineReducers } from 'redux';
 import { getItem } from '../utils/storage'
 
-import { SAVE_USER, REMOVE_USER }from './action-types';
+import { SAVE_USER, REMOVE_USER, CHANGE_LANGUAGE }from './action-types';
 
 const initUser = getItem('user')||{};
 function user(prevState= initUser,action){
@@ -17,13 +17,16 @@ function user(prevState= initUser,action){
       return prevState;
   }
 }
-function bbb(prevState=222,action){
+const initLanguage = navigator.language || navigator.languages[0] || 'zh-CN';
+function language(prevState= initLanguage,action){
   switch(action.type){
+    case CHANGE_LANGUAGE:
+      return action.data;
     default:
       return prevState;
   }
 }
 export default combineReducers({
   user,
-  bbb
+  language
 })
