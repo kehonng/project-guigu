@@ -1,14 +1,16 @@
 import React,{Component} from 'react';
-import { Layout, Breadcrumb } from 'antd';
+import { Layout } from 'antd';
 import { FormattedMessage } from 'react-intl';
 
 import LeftNav from './left-nav';
 import HeaderMain from './header-main';
 import logo from '../../assets/logo.png';
+import widtCheckLogin from '$cont/with-check-login';
 import './index.less';
 
 const { Header, Content, Footer, Sider } = Layout;
 
+@widtCheckLogin
 class BasicLayout extends Component {
   state = {
     collapsed: false,
@@ -42,11 +44,7 @@ class BasicLayout extends Component {
           <Header style={{ background: '#fff', padding: 0 ,height:'80px'}}>
            <HeaderMain />
           </Header>
-          <Content style={{ margin: '0 16px' }}>
-            <Breadcrumb style={{ margin: '16px 0' }}>
-              <Breadcrumb.Item>User</Breadcrumb.Item>
-              <Breadcrumb.Item>Bill</Breadcrumb.Item>
-            </Breadcrumb>
+          <Content style={{ margin: '30px 16px 0 16px' }}>
             <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>{children}</div>
           </Content>
           <Footer style={{ textAlign: 'center' }}>Ant Design ©2018 Created by Ant UED</Footer>

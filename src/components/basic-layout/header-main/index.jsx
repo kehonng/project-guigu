@@ -39,7 +39,7 @@ class HeaderMin extends Component {
     },1000)
   };
   //解除绑定的change事件，避免造成内存泄漏
-  componentWillMount(){
+  componentWillUnmount(){
     screenfull.off('change',this.handleIsScreenFull);
     clearInterval(this.timeId);
   }
@@ -54,16 +54,17 @@ class HeaderMin extends Component {
     screenfull.toggle();
   }
   //退出事件
-  logout=()=>{
+  logout = () => {
     const { intl } = this.props;
+    // 显示对话框
     Modal.confirm({
-      title: intl.formatMessage({id:'logout'}),
-      onOk:()=>{
-        //清空给数据
+      title: intl.formatMessage({ id: 'logout' }),
+      onOk: () => {
+        // 清空用户数据
         removeItem('user');
         
         this.props.removeUser();
-        //跳转到login页面
+        // 跳转到/login
         this.props.history.replace('/login');
       }
     });
@@ -94,7 +95,7 @@ class HeaderMin extends Component {
   };
 
   render() {
-    const { isScreenFull } =this.state;
+    const { isScreenFull,date } =this.state;
     const { username, language, location:{pathname} } = this.props;
     const title = this.findTitle(menus, pathname)
     
@@ -109,12 +110,12 @@ class HeaderMin extends Component {
             <Button type='link' size='small' onClick={this.logout}>退出</Button>
          </div>
          <div className='header-main-bottom'>
-           <div className='header-main-left'>
-             <FormattedMessage id={title} />
-           </div>
-           <div className='header-main-right'>
-             {dayjs().format('YYYY-MM-DD HH:mm:ss')}
-           </div>
+          <span className='header-main-left'>
+              <FormattedMessage id={title} />
+            </span>
+            <span className='header-main-right'>
+              {dayjs(date).format('YYYY/MM/DD HH:mm:ss')}
+            </span>
          </div>
       </div>
     )

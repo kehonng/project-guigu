@@ -1,19 +1,19 @@
-/* 
-  用来检测登录的高阶组件
-*/
-import React,{ Component } from 'react';
+/**
+ * 用来检测登录的高阶组件
+ */
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 
-export default function widtCheckLogin(WrappedComponent) {
-  @connect(
-    (state)=>({user:state.user}),
-    null
-  )
-   class CheckLogin extends Component{
-    //给高阶组件取个名字
-    static displayName = `checkLogin(${WrappedComponent.displayName || WrappedComponent.name ||'Component'})`
-    render(){
+export default function withCheckLogin(WrappedComponent) {
+  @connect(state => ({ user: state.user }), null)
+  class CheckLogin extends Component {
+    // 给组件命名
+    static displayName = `checkLogin(${WrappedComponent.displayName ||
+      WrappedComponent.name ||
+      'Component'})`;
+
+    render() {
       /*
         判断是否登录过： redux --> user
           获取redux数据两种方式：
@@ -35,11 +35,15 @@ export default function widtCheckLogin(WrappedComponent) {
           访问 / /category，(访问不是 /login )跳转到 /login
           访问 /login, 可以访问
       */
-      const { user:{token}, location:{pathname}} = this.props;
-      
-      //判断是否有登录过
+
+      const {
+        user: { token },
+        location: { pathname }
+      } = this.props;
       if (token) {
         // 登录过
+        //console.log(token);
+        
         if (pathname === '/login') {
           // 跳转到主页
           return <Redirect to='/' />;
@@ -51,8 +55,10 @@ export default function widtCheckLogin(WrappedComponent) {
           return <Redirect to='/login' />;
         }
       }
+
       return <WrappedComponent {...this.props} />;
     }
-  };
+  }
+
   return CheckLogin;
 }

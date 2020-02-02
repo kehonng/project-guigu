@@ -4,9 +4,9 @@ import { IntlProvider } from 'react-intl';
 import { connect } from 'react-redux';
 import { ConfigProvider } from 'antd';
 
-import Home from './components/home';
 import Test from './containers/login';
 import BasicLayout from './components/basic-layout';
+import routes from './config/routes';
 import { en, zhCN} from './locales/index';
 import zh_CN from 'antd/es/locale/zh_CN';
 import en_US from 'antd/es/locale/en_US';
@@ -24,13 +24,14 @@ class App extends Component {
             <Switch>
               <Route path='/login' exact component={Test} />
               <BasicLayout>
-                <Route path='/' exact component={Home} />
+                {routes.map(route => {
+                  return <Route {...route} key={route.path} />;
+                })}
               </BasicLayout>
             </Switch>
           </Router>
         </IntlProvider>
       </ConfigProvider>
-     
     )
   }
 }

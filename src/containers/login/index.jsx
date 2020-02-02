@@ -11,10 +11,7 @@ import logo from '../../assets/logo.png';
 import './index.less';
 
 @widtCheckLogin
-@connect(null,{
-  saveUserAsync
-  }
-)
+@connect(null, { saveUserAsync })
 @Form.create()
 class Login extends Component {
 
@@ -26,8 +23,8 @@ class Login extends Component {
     const name = rule.field === 'username'?'用户名':'密码';
     if(!value){
       callback(`请输入您的${name}`);
-    }else if(value.length < 5){
-      callback(`${name}长度最短为5个字符`);
+    }else if(value.length < 4){
+      callback(`${name}长度最短为4个字符`);
     }else if(value.length > 15){
       callback(`${name}长度不能超过为15个字符`);
     }else if(!reg.test(value)){//检测value的值
@@ -41,67 +38,72 @@ class Login extends Component {
     callback();
   }
   //触发表单提交事件
-  login =(e)=>{
-    //清除默认事件
+  login = e => {
     e.preventDefault();
-    /*  
-    1.校验表单
-    2.收集表单数据
-    3.发送请求，请求登录 
-    */
+    
 
-    //validateFields方法 
-    this.props.form.validateFields((err,values)=>{
-      //
+    // 校验表单
+    // 收集表单数据
+    // 发送请求，请求登录
+
+    // 校验表单并收集表单数据
+    this.props.form.validateFields((err, values) => {
       /*
-        *err
-          如果表单校验失败就有错误，返回一个错误对象
-          如果表单校验成功，那么返回对象就为null 
-        *value
-          表示手机表单的数据
-       */
-      if(!err){
-        const { password, username } = values;
-        //发送请求请求登录
-        /* 
-          这里会有一个跨域的错误
-        */
-        /* axios.post('/api/login',{username, password})
-          .then((response)=>{
-            //请求成功
-            
-            //判断是否登录成功
-            if(response.data.status ===0){
-              //登录成功跳转到home页面
+        err 错误对象
+          如果表单校验失败，就有错误，值是对象
+          如果表单校验成功，就没有错误，值是null
+        values
+          收集的表单数据
+      */
+
+      if (!err) {
+        // 表单校验成功
+        const { username, password } = values;
+        // 发送请求，请求登录
+        //#region
+        /* axios
+          .post('/api/login', { username, password })
+          .then(response => {
+            // 请求成功
+
+            // 判断是否登录成功
+            if (response.data.status === 0) {
+              // 登录成功
+              // 跳转到home页面
+              // 不能跳转（只能用于render方法中） 路由链接跳转
+              // return <Redirect to="/" />
+              // 编程式导航（用于非render方法中）
               this.props.history.replace('/');
-            }else{
-              //登录失败
+            } else {
+              // 登录失败
+              // 提示错误
               message.error(response.data.msg);
-              //清空密码
+              // 清空密码
               this.props.form.resetFields(['password']);
             }
-            console.log(response);
           })
-          .catch((err)=>{
+          .catch(err => {
+            // 请求失败
             console.log(err);
-            
-            //返回错误
-            message.error('网络有问题~');
-             //清空密码
-             this.props.form.resetFields(['password']);
-          }) */
-          //需要得到成功还是失败
-          this.props.saveUserAsync(username, password)
-          .then(()=>{
+            // 提示错误
+            message.error('网络错误~');
+            // 清空密码
+            this.props.form.resetFields(['password']);
+          }); */
+        //#endregion
+
+        // 得到登录成功/失败
+        this.props
+          .saveUserAsync(username, password)
+          .then(() => {
             this.props.history.replace('/');
           })
-          .catch((msg)=>{
+          .catch(msg => {
             message.error(msg);
-            //清空密码
-            this.props.from.resetFields([password]);
-          })
+            this.props.form.resetFields(['password']);
+          });
       }
-    })
+    });
   };
   render() {
     const { getFieldDecorator } = this.props.form;
