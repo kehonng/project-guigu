@@ -4,7 +4,15 @@
 import { combineReducers } from 'redux';
 import { getItem } from '../utils/storage'
 
-import { SAVE_USER, REMOVE_USER, CHANGE_LANGUAGE, GET_CATEGORY_LIST}from './action-types';
+import { 
+  SAVE_USER, 
+  REMOVE_USER, 
+  CHANGE_LANGUAGE, 
+  GET_CATEGORY_LIST,
+  ADD_CATEGORY,
+  UPDATE_CATEGORY,
+  DELETE_CATEGORY
+}from './action-types';
 
 const initUser = getItem('user') || {};
 function user(prevState = initUser, action) {
@@ -31,6 +39,24 @@ function categories(prevState= initCategories,action){
   switch(action.type){
     case GET_CATEGORY_LIST:
       return action.data;
+    case ADD_CATEGORY:
+      return [...prevState,action.data];
+    case UPDATE_CATEGORY:
+      return prevState.map(category=>{
+        if(category._id === action.data._id){
+         return action.data
+        }else{
+          return category
+        }
+      });
+    case DELETE_CATEGORY:
+      return prevState.filter(category=>{
+        if(category._id !== action.data){
+          return true;
+        }else{
+          return false;
+        }
+      })
     default:
       return prevState;
   }

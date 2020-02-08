@@ -82,7 +82,12 @@ class HeaderMin extends Component {
       if (menu.children) {
         for (let index = 0; index < menu.children.length; index++) {
           const cMenu = menu.children[index];
-          if (cMenu.path === pathname) {
+          /* 
+            如果pathname是/product，那么返回product
+            如果pathname是/product/add，那么还是返回product
+            cMennu.path是/product
+          */
+          if (pathname.indexOf(cMenu.path) !== -1) {
             return cMenu.title;
           }
         }

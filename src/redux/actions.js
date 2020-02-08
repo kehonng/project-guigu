@@ -3,9 +3,17 @@
  * 同步action
  * 异步action
  */
-import { reqLogin,reqGetCategoryList } from '../api/index';
+import { reqLogin,reqGetCategoryList, reqAddCategory,reqUpdateCategory,reqdeleteCategory } from '../api/index';
 import { setItem } from '../utils/storage';
-import { SAVE_USER, REMOVE_USER, CHANGE_LANGUAGE, GET_CATEGORY_LIST }from './action-types';
+import {
+   SAVE_USER,
+   REMOVE_USER, 
+   CHANGE_LANGUAGE, 
+   GET_CATEGORY_LIST,
+   ADD_CATEGORY,
+   UPDATE_CATEGORY,
+   DELETE_CATEGORY
+}from './action-types';
 
 //语言转换
 export const changeLanguage = (lang)=>({type:CHANGE_LANGUAGE,data:lang});
@@ -48,7 +56,7 @@ export const getCategoryListAsync = () => {
     // 发送请求
     return reqGetCategoryList()
       .then(response => {
-        console.log(response);
+       // console.log(response);
         
         // 调用dispatch，触发更新
         dispatch(getCategoryList(response));
@@ -59,3 +67,44 @@ export const getCategoryListAsync = () => {
       })
   };
 };
+
+//添加分类数据
+const addCategory=(category)=>({type:ADD_CATEGORY,data:category})
+
+export const addCategoryAsync = (categoryName)=>{
+  return (dispatch)=>{
+    //发送请求
+    return reqAddCategory(categoryName)
+    .then((response)=>{
+      //调用dispatch，触发更新
+      dispatch(addCategory(response));
+    })
+  }
+};
+
+//修改分类数据
+const updateCategory = (category)=>({type:UPDATE_CATEGORY,data:category})
+
+export const updateCategoryAsync = (categoryId,categoryName)=>{
+  return (dispatch)=>{
+    //发送请求
+    return reqUpdateCategory(categoryId,categoryName)
+      .then((response)=>{
+        //调用dispatch，触发更新
+        dispatch(updateCategory(response));
+      })
+  }
+}
+
+//删除分类数据
+const deleteCategory = (id)=>({type:DELETE_CATEGORY,data:id});
+
+export const deleteCategoryAsync = (categoryId)=>{
+  return (dispatch)=>{
+    //发送请求
+   return reqdeleteCategory(categoryId)
+    .then((response)=>{
+      dispatch(deleteCategory(response))
+    })
+  }
+}

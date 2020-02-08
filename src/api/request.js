@@ -1,6 +1,10 @@
 import axios from 'axios';
+import { message } from 'antd';
+
 import errCode from '../config/error-errCode';
-//import store from '$redux/store';
+import store from '$redux/store';
+import { removeItem } from '$utils/storage'
+import { removeUser } from '$redux/actions' 
 
 //创建一个axios的实例化对象
 
@@ -16,7 +20,7 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use((config)=>{
   
   //问题: 需要处理token
-  const token = '';
+  const token = store.getState().user.token;;
 
 
   //获取公共请求参数
@@ -64,7 +68,16 @@ axiosInstance.interceptors.response.use(
      if (err.response) {
       // 接受到响应了，但是响应是失败的
       // 根据响应状态码判断错误类型
-      errMsg = errCode[err.response.status];
+      const status = err.response.status;
+      errMsg = errCode[status];
+      if(status === 401){
+        //清空localStorage数据
+        removeItem('user');
+        //触发reudx更新
+        store.dispatch(removeUser());
+        //提示token过期
+        message.success('密码过期，请重新登录')
+      }
     } else {
       // 没有接受到响应
       // 根据响应message(错误信息)来判断错误类型
