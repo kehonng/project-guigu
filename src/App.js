@@ -12,11 +12,30 @@ import zh_CN from 'antd/es/locale/zh_CN';
 import en_US from 'antd/es/locale/en_US';
 
 
-@connect((state)=>({language:state.language}),null)
+@connect((state)=>({language:state.language,roleMenus:state.user.user}),null)
 class App extends Component {
+ 
   render() {
-    const language =this.props.language;
+    const {language,user} =this.props;
     const isEn = language === 'en';
+    let filterRoute = [];
+
+     //对route进行权限管理
+    if(user){
+      const { roleMenus }= user.menu;
+      filterRoute = routes.filter(route=>{
+        //如果在权限数据中有和路由相等的地址，那么就找到了，说明有权限不用过滤
+        roleMenus.find(menu=>{
+          if(menu === route.path){
+            return true;
+          }
+          if(menu === '/product' && route.path.startsWith(menu)){
+            return true
+          }
+          return false;
+        })
+      })
+    }
     return (
       <ConfigProvider locale={isEn?en_US:zh_CN}>
         <IntlProvider locale={language} messages={isEn?en:zhCN}>
@@ -24,7 +43,7 @@ class App extends Component {
             <Switch>
               <Route path='/login' exact component={Test} />
               <BasicLayout>
-                {routes.map(route => {
+                {filterRoute.map(route => {
                   return <Route {...route} key={route.path} />;
                 })}
               </BasicLayout>

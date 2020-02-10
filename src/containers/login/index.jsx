@@ -3,7 +3,8 @@ import { Form, Icon, Input, Button, message} from 'antd';
 import { connect } from 'react-redux'; 
 
 import { saveUserAsync } from '../../redux/actions';
-import widtCheckLogin from '../with-check-login'
+import widtCheckLogin from '../with-check-login';
+import {validator} from '$utils/tools';
 
 
 //图片需要引入才可以使用
@@ -15,28 +16,7 @@ import './index.less';
 @Form.create()
 class Login extends Component {
 
-  //自定义表单校验
-  validator = (rule,value,callback)=>{
-    //console.log(rule,value);
-    //console.log(rule.field);
-    const reg = /^\w+$/;
-    const name = rule.field === 'username'?'用户名':'密码';
-    if(!value){
-      callback(`请输入您的${name}`);
-    }else if(value.length < 4){
-      callback(`${name}长度最短为4个字符`);
-    }else if(value.length > 15){
-      callback(`${name}长度不能超过为15个字符`);
-    }else if(!reg.test(value)){//检测value的值
-      callback(`${name}只能是字母、数字、下划线`);
-    }
-    //不管怎么样都会触发回调函数
-    /* 
-      如果callback回调函数有参数就说明校验失败了
-      如果callback回调函数没有阐述就说明校验成功了   
-    */
-    callback();
-  }
+  
   //触发表单提交事件
   login = e => {
     e.preventDefault();
@@ -123,7 +103,7 @@ class Login extends Component {
                 {
                   rules:[
                     {
-                      validator:this.validator
+                      validator
                     }
                   ]
                 }

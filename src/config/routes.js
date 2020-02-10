@@ -5,6 +5,9 @@ import Home from '../components/home';
 import Category from '../containers/category';
 import Product from '../containers/product';
 import ProductFrom from '../containers/product/product-from';
+import Role from '../containers/role';
+import User from '../containers/user';
+
 
 const routes=[
   {
@@ -31,6 +34,16 @@ const routes=[
     path:'/product/update/:id',
     component:ProductFrom,
     exact:true
-  }
+  },
+  {
+    path:'/role',
+    component:Role,
+    exact:true
+  },
+  {
+    path:'/user',
+    component:User,
+    exact:true
+  },
 ]
 export default routes;

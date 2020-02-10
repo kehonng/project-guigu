@@ -5,7 +5,7 @@ import {connect} from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import { getCategoryListAsync } from '$redux/actions'
-import { reqAddProduct, reqUpdataProduct } from '$api';
+import { reqAddProduct, reqUpdataProduct, reqGetProduct } from '$api';
 
 import './index.less';
 import 'braft-editor/dist/index.css';
@@ -21,11 +21,29 @@ const { Option } = Select;
 ) 
 @Form.create()
 class ProductFrom extends Component {
-
+  //定义状态
+  state={
+    product:{}
+  }
   componentDidMount(){
     if(!this.props.categories.length){
-
       this.props.getCategoryListAsync()
+    };
+
+    //判断当前是否时修改商品 并且是否有state数据
+    if(!this.isAddProduct() && !this.props.location.state){
+      //如果都没有的话，需要把数据请求回来
+      const productId= this.props.match.params.id;
+      reqGetProduct(productId)
+        .then((response)=>{
+          //更新状态展示数据
+          this.setState({
+            product:response
+          })
+        })
+        .catch((err)=>{
+          message.error(err);
+        })
     }
    
   }
@@ -46,7 +64,7 @@ class ProductFrom extends Component {
        // console.log(value);
         const {categoryId,name,price,desc,detail}= values;
         const isAddProduct = this.isAddProduct();
-        let promise = null;
+        let promise = null; 
         if(isAddProduct){
           //发送添加商品请求
           promise = reqAddProduct({ name,
@@ -86,13 +104,16 @@ class ProductFrom extends Component {
   
   } */
   //处理分类id
-  handleCategories = (isAddProduct)=>{
+  handleCategories = (isAddProduct, product)=>{
+   /*  const { categoryId } = this.props.location.state;
+    const { product } = this.state; */
     //获取商品数据
-    if(isAddProduct){
+    if(isAddProduct || (!product.categoryId)){
       return '0'
     };
     //获取分类数据和商品数据Id
-    const { categories, location:{state:{categoryId}}} = this.props;
+    const { categories } = this.props;
+    const { categoryId } = product;
     //find()方法找到返回true,找不到就返回false，既undfind
     const category = categories.find(category=>{
       return category._id === categoryId
@@ -104,6 +125,7 @@ class ProductFrom extends Component {
     return '0';
   }
   render() {
+    const { product } = this.state;
     const { form:{getFieldDecorator},categories,location} = this.props;
     const formItemLayout = {
       labelCol: {
@@ -116,7 +138,11 @@ class ProductFrom extends Component {
       },
     };
     //表单数据，和路由地址
-    const { state } = location;
+    const routeData = location.state;
+
+    //代表一定有数据
+    const state = routeData || product;
+
     //是否是添加商品
     let isAddProduct = this.isAddProduct();
     //判断是否是修改商品
@@ -182,7 +208,7 @@ class ProductFrom extends Component {
                       required:true,message:'请输入商品分类'
                     }
                   ],
-                  initialValue: this.handleCategories(isAddProduct)
+                  initialValue: this.handleCategories(isAddProduct, state)
                 }
               )(
                 <Select placeholder = '请选择商品分类'>

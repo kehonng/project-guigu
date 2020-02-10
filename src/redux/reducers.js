@@ -11,7 +11,10 @@ import {
   GET_CATEGORY_LIST,
   ADD_CATEGORY,
   UPDATE_CATEGORY,
-  DELETE_CATEGORY
+  DELETE_CATEGORY,
+  GET_ROLE_LIST,
+  GET_ROLE,
+  UPDATA_ROLE
 }from './action-types';
 
 const initUser = getItem('user') || {};
@@ -61,8 +64,29 @@ function categories(prevState= initCategories,action){
       return prevState;
   }
 }
+//获取角色列表
+const initroles=[];
+
+function roles(prevState=initroles,action){
+  switch (action.type){
+    case GET_ROLE_LIST:
+      return action.data;
+    case GET_ROLE:
+      return [...prevState,action.data];
+    case UPDATA_ROLE:
+      return prevState.map(role=>{
+        if(role._id === action.data._id){
+          return action.data;
+        }
+        return role;
+      })
+    default:
+      return prevState;
+  }
+}
 export default combineReducers({
   user,
   language,
-  categories
+  categories,
+  roles
 })

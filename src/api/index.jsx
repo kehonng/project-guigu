@@ -66,6 +66,16 @@ export const reqGetProductList = (pageNum,pageSize)=>{
     }
   });
 }
+//请求商品数据
+export const reqGetProduct = (productId)=>{
+  return axiosInstance({
+    url:'/product/get',
+    method:'GET',
+    params:{
+      productId
+    }
+  })
+}
 //请求添加商品数据
 export const reqAddProduct = ({categoryId,name,price,desc,detail})=>{
   return axiosInstance({
@@ -97,6 +107,62 @@ export const reqSearchProduct = ({searchType,searchValue,pageNum,pageSize})=>{
       pageNum,
       pageSize,
       [searchType]:searchValue
+    }
+  });
+}
+//请求修改商品状态数据
+export const reqUpdataProductStatus = (productId,status)=>{
+  return axiosInstance({
+    url: '/product/update/status',
+    method: 'POST',
+    data:{
+      productId,
+      status
+    }
+  });
+}
+
+//请求获取角色列表
+export const reqGetRoleList = ()=>{
+  return axiosInstance({
+    url: '/role/get',
+    method: 'GET',
+  });
+}
+//请求添加角色数据
+export const reqAddRole = (name)=>{
+  return axiosInstance({
+    url: '/role/add',
+    method: 'POST',
+    data:{
+      name
+    }
+  });
+}
+//请求更新角色权限
+export const reqUpdateRole = ({roleId, authName, menus})=>{
+  return axiosInstance({
+    url: '/role/update',
+    method: 'POST',
+    data:{
+      roleId, authName, menus
+    }
+  });
+}
+//请求用户列表
+export const reqUserList = ()=>{
+  return axiosInstance({
+    url: '/user/get',
+    method: 'GET',
+  });
+}
+//请求添加用户数据
+export const reqAddUser = ({username, password, phone, email, roleId})=>{
+  return axiosInstance({
+    url: '/user/add',
+    method: 'POST',
+    data:{
+      username, password, phone, email, roleId
     }
   });
 }

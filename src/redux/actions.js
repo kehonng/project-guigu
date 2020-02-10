@@ -3,7 +3,15 @@
  * 同步action
  * 异步action
  */
-import { reqLogin,reqGetCategoryList, reqAddCategory,reqUpdateCategory,reqdeleteCategory } from '../api/index';
+import {reqLogin,
+        reqGetCategoryList,
+        reqAddCategory,
+        reqUpdateCategory,
+        reqdeleteCategory,
+        reqGetRoleList,
+        reqAddRole,
+        reqUpdateRole
+      } from '../api/index';
 import { setItem } from '../utils/storage';
 import {
    SAVE_USER,
@@ -12,7 +20,10 @@ import {
    GET_CATEGORY_LIST,
    ADD_CATEGORY,
    UPDATE_CATEGORY,
-   DELETE_CATEGORY
+   DELETE_CATEGORY,
+   GET_ROLE_LIST,
+   GET_ROLE,
+   UPDATA_ROLE
 }from './action-types';
 
 //语言转换
@@ -106,5 +117,44 @@ export const deleteCategoryAsync = (categoryId)=>{
     .then((response)=>{
       dispatch(deleteCategory(response))
     })
+  }
+}
+//获取角色列表
+const getRoleList= roles=>({type:GET_ROLE_LIST,data:roles})
+
+export const getRoleListAsync = ()=>{
+  return (dispatch)=>{
+    //发送请求
+   return reqGetRoleList()
+      .then((response)=>{
+        dispatch(getRoleList(response))
+      })
+  }
+}
+//添加角色数据
+const getRole= role=>({type:GET_ROLE,data:role})
+
+export const addRoleAsync = (name)=>{
+  return (dispatch)=>{
+    //发送请求
+   return reqAddRole(name)
+      .then((response)=>{
+        dispatch(getRole(response))
+      })
+  }
+}
+//设置跟新角色权限
+const updataRole= role=>({type:UPDATA_ROLE,data:role})
+
+export const updataRoleAsync = (name)=>{
+  return (dispatch)=>{
+    //发送请求
+   return reqUpdateRole(name)
+      .then((response)=>{
+        dispatch(updataRole(response))
+        //将请求更新后的role返回出去
+        return response;
+      })
+    
   }
 }

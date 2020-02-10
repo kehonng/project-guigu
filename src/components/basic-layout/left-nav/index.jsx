@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import {Menu, Icon} from 'antd';
 import { Link, withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
 
 import menus from '../../../config/mens';
 import { FormattedMessage } from 'react-intl';
 
 const { SubMenu, Item } = Menu;
 
+@connect(state=>({roleMenus:state.user.user.menus}))
 @withRouter//给子组件传递三大属性
 class LeftNav extends Component {
 
@@ -51,12 +53,38 @@ class LeftNav extends Component {
     }
   }
   render() {
+    const roleMenus= this.props.roleMenus;
+    console.log(roleMenus);
+    
+    const filterMenus = menus.reduce((p,c)=>{
+      //深度克隆
+     c = JSON.parse(JSON.stringify(c))
+      //p-表示上一次得值
+      //c表是当前的值
+      if(roleMenus.indexOf(c.path)!==-1 || c.children){
+        if(c.children){
+          const children= c.children.filter(
+            //如果再权限数组中找到了 返回true 不会被过滤
+            //如果在权限数组中找不到 返回false 过滤掉
+            item=>roleMenus.indexOf(item.path)!==-1)
+            if(!children.length){
+              return p;
+            }
+            c.children=children;
+        }
+        p.push(c);
+      
+       
+      }
+        
+      return p;
+    },[])
     let { pathname } = this.props.location;
     //console.log(pathname);
     if(pathname.indexOf('/product') !== -1 ){
        pathname = '/product'
     }
-    const openKeys = this.findOpenKeys(pathname,menus);
+    const openKeys = this.findOpenKeys(pathname,filterMenus);
     
     
     return (
@@ -66,7 +94,7 @@ class LeftNav extends Component {
         defaultOpenKeys={[openKeys]}
         mode="inline"
       >
-        {this.createMenus(menus)}
+        {this.createMenus(filterMenus)}
       </Menu>
     )
   }

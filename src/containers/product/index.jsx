@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Card,Icon,Input,Select,Button,Table, message} from 'antd';
 
-import { reqGetProductList, reqSearchProduct} from '$api'
+import { reqGetProductList, reqSearchProduct, reqUpdataProductStatus } from '$api'
 
 export default class Product extends Component {
   state={
@@ -9,7 +9,8 @@ export default class Product extends Component {
     total:0,
     isLoading:false,
     searchType:'productName',
-    searchValue:''
+    searchValue:'',
+    current:1
   }
   //定义成实例对象的属性，当前的值
   currentSearchValue='';
@@ -20,7 +21,7 @@ export default class Product extends Component {
     this.setState({
       isLoading:true
     })
-    const {searchType,searchValue} = this.state;
+    const {searchType} = this.state;
     const { currentSearchValue }= this
     let promise =null;
     if(currentSearchValue){
@@ -37,7 +38,8 @@ export default class Product extends Component {
         this.setState({
           productList:response.list,
           total:response.total,
-          searchValue:currentSearchValue
+          searchValue:currentSearchValue,
+          current:pageNum
         })
         //请求成功/搜索成功
         message.success(`${currentSearchValue?'搜索':'获取'}商品列表成功`)
@@ -65,16 +67,33 @@ export default class Product extends Component {
     },
     {
       title: '商品价格',
-      dataIndex: 'price'
+      dataIndex: 'price',
+      render:(price)=>{
+        return `￥ ${price}`
+      }
     },
     {
       title: '商品状态',
-      dataIndex: 'status',
-      render(){
+      //dataIndex: 'status'
+      render:({ _id, status })=>{
+        console.log(_id,status);
+        /* 
+          1 代表上架
+          2 代表下架
+          reqUpdataProductStatus
+          
+        */
+        if(status === 1){
+          return (
+          <div>
+            <Button type='primary' onClick={this.UpdateProductStatu(_id,status)}>上架</Button>
+            <span>已下架</span>
+          </div>)
+        }
         return (
           <div>
-            <Button type='primary'>上架</Button>
-            <span>已下架</span>
+            <Button type='primary' onClick={this.UpdateProductStatu(_id,status)}>下架</Button>
+            <span>已上架</span>
           </div>
         )
       }
@@ -92,6 +111,33 @@ export default class Product extends Component {
       }
     }
   ];
+  //修改商品状态数据
+  UpdateProductStatu =(productId,status)=>{
+
+    return ()=>{
+      const newStatus = 3 - status;
+      reqUpdataProductStatus(productId,newStatus)
+        .then((response)=>{
+          //请求成功，更新state状态
+          this.setState({
+            productList:this.state.productList.map(product=>{
+              //判断路由商品数据的Id和路由获取的id是否相等
+              if(product._id === productId){
+                return {
+                  ...product,
+                  status:newStatus
+                }
+              }
+              return product;
+            })
+          })
+          message.success('修改商品状态成功')
+        })
+        .catch((err)=>{
+          message.error(err);
+        })
+    }
+  }
   //点击修改商品数据
   updateProduct=(product)=>{
     return ()=>{
@@ -125,7 +171,7 @@ export default class Product extends Component {
   }
 
   render() {
-    const { productList,total,isLoading, searchType, searchValue} = this.state;
+    const { productList,total,isLoading, searchType, searchValue,current} = this.state;
     return (
       <Card
         title={
@@ -161,7 +207,8 @@ export default class Product extends Component {
           showSizeChanger:true,
           total,
           onChange:this.getProductList,
-          onShowSizeChange:this.getProductList
+          onShowSizeChange:this.getProductList,
+          current
          }}
          rowKey='_id'
          loading={isLoading}
